@@ -50,7 +50,7 @@ export function PropertyDisplay({ pinnedAlloys, nearestAlloy }: Props) {
           <thead>
             <tr>
               <th className={styles.propHeader}>Property</th>
-              {alloys.map((alloy, i) => {
+              {alloys.map((alloy) => {
                 const isPinned = pinnedAlloys.some((a) => a.id === alloy.id);
                 const colorIdx = pinnedAlloys.findIndex((a) => a.id === alloy.id);
                 return (
