@@ -1,0 +1,77 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.trigger:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.arrow {
+  font-size: 0.6rem;
+  opacity: 0.5;
+}
+
+.dropdown {
+  position: absolute;
+  z-index: 100;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 6px 0;
+  max-height: 320px;
+  overflow-y: auto;
+  min-width: 200px;
+}
+
+.categoryLabel {
+  padding: 6px 12px 2px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 5px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.78rem;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.option:hover {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.optionActive {
+  composes: option;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}

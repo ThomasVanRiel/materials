@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Alloy } from "./types";
 import { ALLOYS } from "./data/alloys";
 import { computePrevalence, getElementsByPrevalence } from "./data/elements";
@@ -12,7 +12,45 @@ import { ElementSelector } from "./components/composition/ElementSelector";
 import { CompositionSliders } from "./components/composition/CompositionSliders";
 import { CompositionRadar } from "./components/chart/CompositionRadar";
 import { PropertyDisplay } from "./components/chart/PropertyDisplay";
+import { ScatterPlot } from "./components/chart/ScatterPlot";
+import {
+  AXIS_OPTIONS_MAP,
+  DEFAULT_X_AXIS,
+  DEFAULT_Y_AXIS,
+} from "./lib/axisOptions";
 import "./App.css";
+
+type Tab = "composition" | "properties";
+
+const VALID_TABS = new Set<Tab>(["composition", "properties"]);
+
+interface RouteState {
+  tab: Tab;
+  xAxis: string;
+  yAxis: string;
+}
+
+function getRouteState(): RouteState {
+  const path = window.location.pathname.replace(/^\//, "").replace(/\/$/, "");
+  const tab = VALID_TABS.has(path as Tab) ? (path as Tab) : "composition";
+  const params = new URLSearchParams(window.location.search);
+  const x = params.get("x");
+  const y = params.get("y");
+  return {
+    tab,
+    xAxis: x && AXIS_OPTIONS_MAP.has(x) ? x : DEFAULT_X_AXIS,
+    yAxis: y && AXIS_OPTIONS_MAP.has(y) ? y : DEFAULT_Y_AXIS,
+  };
+}
+
+function buildUrl(tab: Tab, xAxis: string, yAxis: string): string {
+  if (tab === "composition") return "/";
+  const params = new URLSearchParams();
+  if (xAxis !== DEFAULT_X_AXIS) params.set("x", xAxis);
+  if (yAxis !== DEFAULT_Y_AXIS) params.set("y", yAxis);
+  const qs = params.toString();
+  return `/properties${qs ? `?${qs}` : ""}`;
+}
 
 const PREVALENCE = computePrevalence(ALLOYS);
 
@@ -28,6 +66,41 @@ export default function App() {
   const { selectedElements, toggleElement } = useElementSelection();
   const [selectedAlloy, setSelectedAlloy] = useState<Alloy | null>(null);
   const [pinnedAlloys, setPinnedAlloys] = useState<Alloy[]>([]);
+  const initRoute = useMemo(() => getRouteState(), []);
+  const [activeTab, setActiveTab] = useState<Tab>(initRoute.tab);
+  const [scatterXAxis, setScatterXAxis] = useState(initRoute.xAxis);
+  const [scatterYAxis, setScatterYAxis] = useState(initRoute.yAxis);
+
+  const pushUrl = useCallback((tab: Tab, x: string, y: string) => {
+    const url = buildUrl(tab, x, y);
+    window.history.pushState(null, "", url);
+  }, []);
+
+  const navigateTab = useCallback((tab: Tab) => {
+    setActiveTab(tab);
+    pushUrl(tab, scatterXAxis, scatterYAxis);
+  }, [pushUrl, scatterXAxis, scatterYAxis]);
+
+  const handleScatterXChange = useCallback((key: string) => {
+    setScatterXAxis(key);
+    pushUrl("properties", key, scatterYAxis);
+  }, [pushUrl, scatterYAxis]);
+
+  const handleScatterYChange = useCallback((key: string) => {
+    setScatterYAxis(key);
+    pushUrl("properties", scatterXAxis, key);
+  }, [pushUrl, scatterXAxis]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const state = getRouteState();
+      setActiveTab(state.tab);
+      setScatterXAxis(state.xAxis);
+      setScatterYAxis(state.yAxis);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const sortedElements = useMemo(
     () => getElementsByPrevalence(PREVALENCE, balanceElement),
@@ -74,6 +147,8 @@ export default function App() {
 
   const displayAlloy = selectedAlloy ?? nearestAlloys[0]?.alloy ?? null;
 
+  const isComposition = activeTab === "composition";
+
   return (
     <div className="app">
       <header className="header">
@@ -81,55 +156,86 @@ export default function App() {
         <p>Adjust elements to explore alloy compositions and properties</p>
       </header>
 
-      <div className="layout">
-        <aside className="panel left-panel">
-          <div className="panel-section">
-            <h2 className="panel-title">Select Alloy</h2>
-            <AlloySearch
-              alloys={ALLOYS}
-              selectedAlloy={selectedAlloy}
-              onSelect={handleSelectAlloy}
-            />
-          </div>
+      <div className="tabs">
+        <button
+          className={`tab ${isComposition ? "tab-active" : ""}`}
+          onClick={() => navigateTab("composition")}
+        >
+          Composition
+        </button>
+        <button
+          className={`tab ${!isComposition ? "tab-active" : ""}`}
+          onClick={() => navigateTab("properties")}
+        >
+          Properties
+        </button>
+      </div>
 
-          <div className="panel-section">
-            <ElementSelector
-              elements={sortedElements}
-              selectedElements={selectedElements}
-              onToggle={toggleElement}
-            />
-          </div>
+      <div className={isComposition ? "layout" : "layout layout-properties"}>
+        {isComposition && (
+          <aside className="panel left-panel">
+            <div className="panel-section">
+              <h2 className="panel-title">Select Alloy</h2>
+              <AlloySearch
+                alloys={ALLOYS}
+                selectedAlloy={selectedAlloy}
+                onSelect={handleSelectAlloy}
+              />
+            </div>
 
-          <div className="panel-section panel-section-fill">
-            <h2 className="panel-title">Composition</h2>
-            <CompositionSliders
-              elements={sortedElements}
-              composition={composition}
-              balanceElement={balanceElement}
-              balanceValue={balanceValue}
-              onElementChange={handleElementChange}
-              onBalanceChange={changeBalanceElement}
-            />
-          </div>
-        </aside>
+            <div className="panel-section">
+              <ElementSelector
+                elements={sortedElements}
+                selectedElements={selectedElements}
+                onToggle={toggleElement}
+              />
+            </div>
+
+            <div className="panel-section panel-section-fill">
+              <h2 className="panel-title">Composition</h2>
+              <CompositionSliders
+                elements={sortedElements}
+                composition={composition}
+                balanceElement={balanceElement}
+                balanceValue={balanceValue}
+                onElementChange={handleElementChange}
+                onBalanceChange={changeBalanceElement}
+              />
+            </div>
+          </aside>
+        )}
 
         <main className="center-column">
-          <div className="panel center-panel">
-            <CompositionRadar
-              composition={composition}
-              selectedElements={selectedElements}
-              balanceElement={balanceElement}
-              prevalence={PREVALENCE}
-              pinnedAlloys={pinnedAlloys}
-              onElementChange={handleElementChange}
-            />
-          </div>
-          <div className="panel">
-            <PropertyDisplay
-              pinnedAlloys={pinnedAlloys}
-              nearestAlloy={displayAlloy}
-            />
-          </div>
+          {isComposition ? (
+            <>
+              <div className="panel center-panel">
+                <CompositionRadar
+                  composition={composition}
+                  selectedElements={selectedElements}
+                  balanceElement={balanceElement}
+                  prevalence={PREVALENCE}
+                  pinnedAlloys={pinnedAlloys}
+                  onElementChange={handleElementChange}
+                />
+              </div>
+              <div className="panel">
+                <PropertyDisplay
+                  pinnedAlloys={pinnedAlloys}
+                  nearestAlloy={displayAlloy}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="panel center-panel">
+              <ScatterPlot
+                pinnedAlloys={pinnedAlloys}
+                xAxisKey={scatterXAxis}
+                yAxisKey={scatterYAxis}
+                onXAxisChange={handleScatterXChange}
+                onYAxisChange={handleScatterYChange}
+              />
+            </div>
+          )}
         </main>
 
         <aside className="panel right-panel">
@@ -139,12 +245,16 @@ export default function App() {
               onToggle={handleTogglePinned}
             />
           </div>
-          <div className="panel-divider" />
-          <NearestAlloys
-            matches={nearestAlloys}
-            selectedAlloy={selectedAlloy}
-            onSelect={handleSelectFromNearest}
-          />
+          {isComposition && (
+            <>
+              <div className="panel-divider" />
+              <NearestAlloys
+                matches={nearestAlloys}
+                selectedAlloy={selectedAlloy}
+                onSelect={handleSelectFromNearest}
+              />
+            </>
+          )}
         </aside>
       </div>
 
@@ -169,11 +279,11 @@ export default function App() {
           </div>
           <div className="guide-item">
             <h3>Compare alloys</h3>
-            <p>Click alloys in the "Compare Alloys" panel on the right to pin them to the chart. Each pinned alloy appears as a dashed overlay with its own color. Click a pinned alloy again to remove it.</p>
+            <p>Click alloys in the "Compare Alloys" panel on the right to pin them to the chart. Each pinned alloy appears as a colored overlay. Click a pinned alloy again to remove it.</p>
           </div>
           <div className="guide-item">
-            <h3>View properties</h3>
-            <p>The table below the chart shows mechanical, thermal, and corrosion properties for all pinned alloys and the nearest match side by side.</p>
+            <h3>Explore properties</h3>
+            <p>Switch to the Properties tab to see an XY scatter plot of all alloys. Click the axis labels to change what's plotted. Families appear as colored patches. Pinned alloys are highlighted.</p>
           </div>
         </div>
       </footer>
