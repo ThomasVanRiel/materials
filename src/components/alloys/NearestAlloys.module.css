@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.item:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.item.active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1f2937;
+}
+
+.similarity {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.75rem;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.family {
+  font-size: 0.7rem;
+  font-weight: 500;
+}

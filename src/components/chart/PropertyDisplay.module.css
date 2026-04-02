@@ -1,0 +1,99 @@
+.container {
+  width: 100%;
+}
+
+.empty {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.table th,
+.table td {
+  padding: 5px 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.propHeader {
+  font-weight: 600;
+  color: #6b7280;
+  border-bottom: 2px solid #e5e7eb;
+  position: sticky;
+  left: 0;
+  background: white;
+}
+
+.alloyHeader {
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  text-align: right;
+  font-size: 0.78rem;
+}
+
+.colorDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.nearestBadge {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.sectionStart td {
+  border-top: 1px solid #e5e7eb;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  font-weight: 600;
+  margin-bottom: 1px;
+}
+
+.propLabel {
+  color: #6b7280;
+  position: sticky;
+  left: 0;
+  background: white;
+}
+
+.propValue {
+  text-align: right;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.table tbody tr:hover .propLabel {
+  background: #f9fafb;
+}
