@@ -206,6 +206,188 @@ export const ALLOYS: Alloy[] = [
       corrosion: { corrosionResistance: "Excellent", pren: null },
     },
   },
+
+  // ── Additional Stainless Steels ──
+  {
+    id: "aisi-316l",
+    name: "AISI 316L",
+    family: "Stainless Steel",
+    composition: { C: 0.03, Mn: 2.0, Si: 0.75, Cr: 16.5, Ni: 10.0, Mo: 2.1, N: 0.10, P: 0.045, S: 0.03 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 485, yieldStrengthMPa: 170, elongationPercent: 40 },
+      thermal: { thermalConductivityWmK: 16.3, maxServiceTempC: 870, meltingRangeLowC: 1390, meltingRangeHighC: 1440 },
+      corrosion: { corrosionResistance: "Excellent", pren: 23.4 },
+    },
+  },
+  {
+    id: "aisi-321",
+    name: "AISI 321",
+    family: "Stainless Steel",
+    composition: { C: 0.08, Mn: 2.0, Si: 0.75, Cr: 17.5, Ni: 9.5, Ti: 0.40, P: 0.045, S: 0.03 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 515, yieldStrengthMPa: 205, elongationPercent: 40 },
+      thermal: { thermalConductivityWmK: 16.1, maxServiceTempC: 870, meltingRangeLowC: 1400, meltingRangeHighC: 1425 },
+      corrosion: { corrosionResistance: "Good", pren: 17.5 },
+    },
+  },
+  {
+    id: "aisi-347",
+    name: "AISI 347",
+    family: "Stainless Steel",
+    composition: { C: 0.08, Mn: 2.0, Si: 0.75, Cr: 18.0, Ni: 11.0, Nb: 0.80, P: 0.045, S: 0.03 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 515, yieldStrengthMPa: 205, elongationPercent: 40 },
+      thermal: { thermalConductivityWmK: 16.2, maxServiceTempC: 870, meltingRangeLowC: 1400, meltingRangeHighC: 1425 },
+      corrosion: { corrosionResistance: "Good", pren: 18.0 },
+    },
+  },
+  {
+    id: "aisi-904l",
+    name: "904L",
+    family: "Stainless Steel",
+    composition: { C: 0.02, Mn: 2.0, Si: 1.0, Cr: 20.0, Ni: 25.0, Mo: 4.5, Cu: 1.5, N: 0.10 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 490, yieldStrengthMPa: 220, elongationPercent: 35 },
+      thermal: { thermalConductivityWmK: 12.2, maxServiceTempC: 400, meltingRangeLowC: 1350, meltingRangeHighC: 1400 },
+      corrosion: { corrosionResistance: "Excellent", pren: 35.5 },
+    },
+  },
+
+  // ── Aluminum Alloys ── (balance = Al)
+  {
+    id: "al-1100",
+    name: "AA 1100",
+    family: "Aluminum Alloy",
+    composition: { Al: 99.0, Si: 0.25, Fe: 0.40, Cu: 0.10, Mn: 0.05 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 90, yieldStrengthMPa: 34, elongationPercent: 35 },
+      thermal: { thermalConductivityWmK: 222, maxServiceTempC: 200, meltingRangeLowC: 643, meltingRangeHighC: 657 },
+      corrosion: { corrosionResistance: "Excellent", pren: null },
+    },
+  },
+  {
+    id: "al-2024",
+    name: "AA 2024",
+    family: "Aluminum Alloy",
+    composition: { Al: 93.5, Cu: 4.4, Mg: 1.5, Mn: 0.6 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 470, yieldStrengthMPa: 325, elongationPercent: 20 },
+      thermal: { thermalConductivityWmK: 121, maxServiceTempC: 175, meltingRangeLowC: 500, meltingRangeHighC: 638 },
+      corrosion: { corrosionResistance: "Poor", pren: null },
+    },
+  },
+  {
+    id: "al-5052",
+    name: "AA 5052",
+    family: "Aluminum Alloy",
+    composition: { Al: 97.2, Mg: 2.5, Cr: 0.25, Fe: 0.10 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 230, yieldStrengthMPa: 195, elongationPercent: 12 },
+      thermal: { thermalConductivityWmK: 138, maxServiceTempC: 200, meltingRangeLowC: 607, meltingRangeHighC: 650 },
+      corrosion: { corrosionResistance: "Excellent", pren: null },
+    },
+  },
+  {
+    id: "al-6061",
+    name: "AA 6061-T6",
+    family: "Aluminum Alloy",
+    composition: { Al: 97.3, Mg: 1.0, Si: 0.6, Cu: 0.28, Cr: 0.20, Fe: 0.35 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 310, yieldStrengthMPa: 276, elongationPercent: 12 },
+      thermal: { thermalConductivityWmK: 167, maxServiceTempC: 175, meltingRangeLowC: 582, meltingRangeHighC: 652 },
+      corrosion: { corrosionResistance: "Good", pren: null },
+    },
+  },
+  {
+    id: "al-7075",
+    name: "AA 7075-T6",
+    family: "Aluminum Alloy",
+    composition: { Al: 90.0, Zn: 5.6, Mg: 2.5, Cu: 1.6, Cr: 0.23 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 572, yieldStrengthMPa: 503, elongationPercent: 11 },
+      thermal: { thermalConductivityWmK: 130, maxServiceTempC: 120, meltingRangeLowC: 477, meltingRangeHighC: 635 },
+      corrosion: { corrosionResistance: "Fair", pren: null },
+    },
+  },
+  {
+    id: "al-356",
+    name: "A356 (Casting)",
+    family: "Aluminum Alloy",
+    composition: { Al: 92.0, Si: 7.0, Mg: 0.35, Fe: 0.15 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 234, yieldStrengthMPa: 165, elongationPercent: 3.5 },
+      thermal: { thermalConductivityWmK: 151, maxServiceTempC: 175, meltingRangeLowC: 557, meltingRangeHighC: 613 },
+      corrosion: { corrosionResistance: "Good", pren: null },
+    },
+  },
+
+  // ── Copper Alloys ── (balance = Cu)
+  {
+    id: "c11000",
+    name: "C11000 (ETP Copper)",
+    family: "Copper Alloy",
+    composition: { Cu: 99.9 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 220, yieldStrengthMPa: 69, elongationPercent: 50 },
+      thermal: { thermalConductivityWmK: 391, maxServiceTempC: 200, meltingRangeLowC: 1065, meltingRangeHighC: 1083 },
+      corrosion: { corrosionResistance: "Good", pren: null },
+    },
+  },
+  {
+    id: "c26000",
+    name: "C26000 (Cartridge Brass)",
+    family: "Copper Alloy",
+    composition: { Cu: 70.0, Zn: 30.0 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 340, yieldStrengthMPa: 105, elongationPercent: 63 },
+      thermal: { thermalConductivityWmK: 121, maxServiceTempC: 250, meltingRangeLowC: 915, meltingRangeHighC: 955 },
+      corrosion: { corrosionResistance: "Fair", pren: null },
+    },
+  },
+  {
+    id: "c36000",
+    name: "C36000 (Free-Cut Brass)",
+    family: "Copper Alloy",
+    composition: { Cu: 61.5, Zn: 35.5, Pb: 3.0 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 340, yieldStrengthMPa: 125, elongationPercent: 53 },
+      thermal: { thermalConductivityWmK: 115, maxServiceTempC: 250, meltingRangeLowC: 885, meltingRangeHighC: 900 },
+      corrosion: { corrosionResistance: "Fair", pren: null },
+    },
+  },
+  {
+    id: "c51000",
+    name: "C51000 (Phosphor Bronze)",
+    family: "Copper Alloy",
+    composition: { Cu: 94.8, Sn: 5.0, P: 0.20 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 380, yieldStrengthMPa: 165, elongationPercent: 57 },
+      thermal: { thermalConductivityWmK: 69, maxServiceTempC: 200, meltingRangeLowC: 1000, meltingRangeHighC: 1050 },
+      corrosion: { corrosionResistance: "Good", pren: null },
+    },
+  },
+  {
+    id: "c71500",
+    name: "C71500 (Cu-Ni 70/30)",
+    family: "Copper Alloy",
+    composition: { Cu: 69.5, Ni: 30.0, Fe: 0.40, Mn: 0.50 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 380, yieldStrengthMPa: 125, elongationPercent: 36 },
+      thermal: { thermalConductivityWmK: 29, maxServiceTempC: 350, meltingRangeLowC: 1170, meltingRangeHighC: 1240 },
+      corrosion: { corrosionResistance: "Excellent", pren: null },
+    },
+  },
+  {
+    id: "c95400",
+    name: "C95400 (Al Bronze)",
+    family: "Copper Alloy",
+    composition: { Cu: 85.0, Al: 11.0, Fe: 4.0 },
+    properties: {
+      mechanical: { hardnessHRC: null, tensileStrengthMPa: 586, yieldStrengthMPa: 241, elongationPercent: 12 },
+      thermal: { thermalConductivityWmK: 59, maxServiceTempC: 400, meltingRangeLowC: 1030, meltingRangeHighC: 1040 },
+      corrosion: { corrosionResistance: "Excellent", pren: null },
+    },
+  },
 ];
 
 /** All element symbols that appear across the dataset */

@@ -28,19 +28,24 @@ interface Props {
   onElementChange?: (symbol: string, value: number) => void;
 }
 
-function CustomTooltip({ active, payload, pinnedAlloys }: any) {
+function CustomTooltip({ active, payload, pinnedAlloys, hiddenSeries }: any) {
   if (!active || !payload?.length) return null;
   const data = payload[0]?.payload;
   if (!data) return null;
+  const hidden = (hiddenSeries as Set<string>) ?? new Set();
 
   return (
     <div className={styles.tooltip}>
       <div className={styles.tooltipAxis}>{data.axis}</div>
-      <div>Your mix: {data.rawValue.toFixed(2)}%</div>
-      {pinnedAlloys.map((alloy: Alloy) => {
+      {!hidden.has("normalizedValue") && (
+        <div style={{ color: "#3b82f6" }}>Your mix: {data.rawValue.toFixed(2)}%</div>
+      )}
+      {pinnedAlloys.map((alloy: Alloy, i: number) => {
+        if (hidden.has(`${alloy.id}_norm`)) return null;
         const raw = data[`${alloy.id}_raw`];
+        const color = ALLOY_COLORS[i % ALLOY_COLORS.length];
         return raw !== undefined ? (
-          <div key={alloy.id}>{alloy.name}: {Number(raw).toFixed(2)}%</div>
+          <div key={alloy.id} style={{ color }}>{alloy.name}: {Number(raw).toFixed(2)}%</div>
         ) : null;
       })}
     </div>
@@ -58,13 +63,27 @@ export function CompositionRadar({
   const chartRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef<string | null>(null);
   const [frozenAxisMax, setFrozenAxisMax] = useState<number | undefined>(undefined);
+  const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(() => new Set());
+
+  const handleLegendClick = useCallback((entry: any) => {
+    const key = entry.dataKey as string;
+    setHiddenSeries((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  }, []);
 
   const { points: data, axisMax } = buildRadarData(
     composition, selectedElements, balanceElement, prevalence, pinnedAlloys, frozenAxisMax
   );
 
   const getAngleAndRadius = useCallback(
-    (clientX: number, clientY: number) => {
+    (clientX: number, clientY: number, clampOnly?: boolean) => {
       const el = chartRef.current;
       if (!el) return null;
       const rect = el.getBoundingClientRect();
@@ -75,7 +94,12 @@ export function CompositionRadar({
       const dx = clientX - cx;
       const dy = clientY - cy;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const ratio = Math.min(Math.max(dist / outerRadius, 0), 1);
+
+      // For initial click: reject if outside chart circle
+      // For active drag: clamp to [0, 1]
+      if (!clampOnly && dist > outerRadius) return null;
+
+      const ratio = Math.min(dist / outerRadius, 1);
 
       let angle = Math.atan2(dx, -dy) * (180 / Math.PI);
       if (angle < 0) angle += 360;
@@ -139,7 +163,7 @@ export function CompositionRadar({
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (!draggingRef.current) return;
-      const pos = getAngleAndRadius(e.clientX, e.clientY);
+      const pos = getAngleAndRadius(e.clientX, e.clientY, true);
       if (!pos) return;
       updateElement(draggingRef.current, pos.ratio);
     },
@@ -182,23 +206,39 @@ export function CompositionRadar({
             dataKey="normalizedValue"
             stroke="#3b82f6"
             fill="#3b82f6"
-            fillOpacity={0.15}
+            fillOpacity={hiddenSeries.has("normalizedValue") ? 0 : 0.15}
             strokeWidth={2}
+            hide={hiddenSeries.has("normalizedValue")}
           />
-          {pinnedAlloys.map((alloy, i) => (
-            <Radar
-              key={alloy.id}
-              name={alloy.name}
-              dataKey={`${alloy.id}_norm`}
-              stroke={ALLOY_COLORS[i % ALLOY_COLORS.length]}
-              fill={ALLOY_COLORS[i % ALLOY_COLORS.length]}
-              fillOpacity={0.05}
-              strokeWidth={2}
-              strokeDasharray="4 3"
-            />
-          ))}
-          <Tooltip content={<CustomTooltip pinnedAlloys={pinnedAlloys} />} />
-          <Legend />
+          {pinnedAlloys.map((alloy, i) => {
+            const dataKey = `${alloy.id}_norm`;
+            const hidden = hiddenSeries.has(dataKey);
+            return (
+              <Radar
+                key={alloy.id}
+                name={alloy.name}
+                dataKey={dataKey}
+                stroke={ALLOY_COLORS[i % ALLOY_COLORS.length]}
+                fill={ALLOY_COLORS[i % ALLOY_COLORS.length]}
+                fillOpacity={hidden ? 0 : 0.05}
+                strokeWidth={2}
+                hide={hidden}
+              />
+            );
+          })}
+          <Tooltip content={<CustomTooltip pinnedAlloys={pinnedAlloys} hiddenSeries={hiddenSeries} />} />
+          <Legend
+            onClick={handleLegendClick}
+            formatter={(value: string, entry: any) => (
+              <span style={{
+                color: hiddenSeries.has(entry.dataKey) ? "#d1d5db" : undefined,
+                cursor: "pointer",
+                textDecoration: hiddenSeries.has(entry.dataKey) ? "line-through" : undefined,
+              }}>
+                {value}
+              </span>
+            )}
+          />
         </RadarChart>
       </ResponsiveContainer>
     </div>

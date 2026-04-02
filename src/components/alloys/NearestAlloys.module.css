@@ -22,6 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  width: 100%;
   padding: 8px 10px;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -29,6 +30,7 @@
   cursor: pointer;
   text-align: left;
   transition: all 0.15s ease;
+  box-sizing: border-box;
 }
 
 .item:hover {

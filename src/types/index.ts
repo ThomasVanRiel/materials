@@ -41,7 +41,9 @@ export type AlloyFamily =
   | "Carbon Steel"
   | "Stainless Steel"
   | "Tool Steel"
-  | "Nickel Alloy";
+  | "Nickel Alloy"
+  | "Aluminum Alloy"
+  | "Copper Alloy";
 
 export interface Alloy {
   id: string;

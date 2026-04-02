@@ -1,5 +1,6 @@
 import type { Alloy } from "../../types";
 import { ALLOYS } from "../../data/alloys";
+import { AlloyTooltip } from "./AlloyTooltip";
 import styles from "./PinnedAlloys.module.css";
 
 const ALLOY_COLORS = [
@@ -39,14 +40,15 @@ export function PinnedAlloys({ pinnedAlloys, onToggle }: Props) {
       )}
       <div className={styles.list}>
         {ALLOYS.filter((a) => !pinnedIds.has(a.id)).map((alloy) => (
-          <button
-            key={alloy.id}
-            className={styles.item}
-            onClick={() => onToggle(alloy)}
-          >
-            <span className={styles.itemName}>{alloy.name}</span>
-            <span className={styles.itemFamily}>{alloy.family}</span>
-          </button>
+          <AlloyTooltip key={alloy.id} composition={alloy.composition}>
+            <button
+              className={styles.item}
+              onClick={() => onToggle(alloy)}
+            >
+              <span className={styles.itemName}>{alloy.name}</span>
+              <span className={styles.itemFamily}>{alloy.family}</span>
+            </button>
+          </AlloyTooltip>
         ))}
       </div>
     </div>

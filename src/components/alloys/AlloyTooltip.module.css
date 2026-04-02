@@ -1,0 +1,35 @@
+.wrapper {
+  width: 100%;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 8px 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.entry {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.75rem;
+}
+
+.sym {
+  font-weight: 600;
+  color: #374151;
+}
+
+.val {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  color: #6b7280;
+}
