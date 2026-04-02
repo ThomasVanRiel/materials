@@ -3,13 +3,41 @@
   position: relative;
 }
 
-.axisLabel {
+.controls {
   position: absolute;
   top: 8px;
   right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+.axisLabel {
   font-size: 0.7rem;
   color: #9ca3af;
   font-family: "JetBrains Mono", "Fira Code", monospace;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.toggleLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #6b7280;
+  user-select: none;
 }
 
 .tooltip {

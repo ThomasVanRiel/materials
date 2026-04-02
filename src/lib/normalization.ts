@@ -11,6 +11,11 @@ export interface RadarResult {
  * All axes share the same max, determined by the largest value
  * across user composition, pinned alloys, and "Other".
  */
+function logNorm(value: number, max: number): number {
+  if (max <= 0) return 0;
+  return Math.log1p(value) / Math.log1p(max);
+}
+
 export function buildRadarData(
   composition: Composition,
   selectedElements: Set<string>,
@@ -18,7 +23,8 @@ export function buildRadarData(
   prevalence: Map<string, number>,
   pinnedAlloys: Alloy[],
   /** If provided, use this as the axis max instead of computing it (used during drag) */
-  frozenAxisMax?: number
+  frozenAxisMax?: number,
+  logScale?: boolean
 ): RadarResult {
   const shownElements = new Set(selectedElements);
   shownElements.delete(balanceElement);
@@ -83,16 +89,18 @@ export function buildRadarData(
   // Use frozen max during drag, otherwise computed max
   const axisMax = frozenAxisMax ?? (globalMax > 0 ? globalMax : 1);
 
+  const norm = (v: number) => logScale ? logNorm(v, axisMax) : v / axisMax;
+
   // Second pass: normalize using uniform max
   const points: RadarDataPoint[] = rawPoints.map(({ axis, userVal, alloyVals }) => {
     const point: RadarDataPoint = {
       axis,
       rawValue: userVal,
-      normalizedValue: userVal / axisMax,
+      normalizedValue: norm(userVal),
     };
     for (const alloy of pinnedAlloys) {
       const val = alloyVals.get(alloy.id) ?? 0;
-      point[`${alloy.id}_norm`] = val / axisMax;
+      point[`${alloy.id}_norm`] = norm(val);
       point[`${alloy.id}_raw`] = val;
     }
     return point;
@@ -105,11 +113,11 @@ export function buildRadarData(
     const otherPoint: RadarDataPoint = {
       axis: "Other",
       rawValue: otherSum,
-      normalizedValue: otherSum / axisMax,
+      normalizedValue: norm(otherSum),
     };
     for (const alloy of pinnedAlloys) {
       const val = otherSums.get(alloy.id) ?? 0;
-      otherPoint[`${alloy.id}_norm`] = val / axisMax;
+      otherPoint[`${alloy.id}_norm`] = norm(val);
       otherPoint[`${alloy.id}_raw`] = val;
     }
     points.push(otherPoint);
