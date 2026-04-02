@@ -165,7 +165,7 @@ export function CompositionRadar({
       style={{ cursor: draggingRef.current ? "grabbing" : "crosshair" }}
     >
       <div className={styles.axisLabel}>0–{axisMax.toFixed(1)} wt%</div>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={550}>
         <RadarChart data={data} cx="50%" cy="50%" outerRadius="75%">
           <PolarGrid stroke="#e5e7eb" />
           <PolarAngleAxis

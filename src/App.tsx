@@ -100,7 +100,7 @@ export default function App() {
             />
           </div>
 
-          <div className="panel-section">
+          <div className="panel-section panel-section-fill">
             <h2 className="panel-title">Composition</h2>
             <CompositionSliders
               elements={sortedElements}
@@ -133,10 +133,12 @@ export default function App() {
         </main>
 
         <aside className="panel right-panel">
-          <PinnedAlloys
-            pinnedAlloys={pinnedAlloys}
-            onToggle={handleTogglePinned}
-          />
+          <div className="panel-section-fill">
+            <PinnedAlloys
+              pinnedAlloys={pinnedAlloys}
+              onToggle={handleTogglePinned}
+            />
+          </div>
           <div className="panel-divider" />
           <NearestAlloys
             matches={nearestAlloys}
@@ -145,6 +147,36 @@ export default function App() {
           />
         </aside>
       </div>
+
+      <footer className="guide">
+        <h2 className="guide-title">How to use</h2>
+        <div className="guide-grid">
+          <div className="guide-item">
+            <h3>Adjust composition</h3>
+            <p>Use the sliders on the left to set element concentrations. The balance element (default: Fe) auto-adjusts to keep the total at 100%. You can change which element is the balance with the dropdown.</p>
+          </div>
+          <div className="guide-item">
+            <h3>Drag on the chart</h3>
+            <p>Click and drag along any axis on the radar chart to adjust that element directly. The chart scale stays fixed while dragging for stability.</p>
+          </div>
+          <div className="guide-item">
+            <h3>Choose radar axes</h3>
+            <p>Toggle element chips to control which elements appear as individual axes on the radar chart. Unselected elements are grouped into "Other" (if enabled). Elements are sorted by prevalence across all alloys.</p>
+          </div>
+          <div className="guide-item">
+            <h3>Select a known alloy</h3>
+            <p>Search for a known alloy at the top left. Selecting one sets all sliders to its composition. Moving any slider afterwards clears the selection and recalculates the nearest match.</p>
+          </div>
+          <div className="guide-item">
+            <h3>Compare alloys</h3>
+            <p>Click alloys in the "Compare Alloys" panel on the right to pin them to the chart. Each pinned alloy appears as a dashed overlay with its own color. Click a pinned alloy again to remove it.</p>
+          </div>
+          <div className="guide-item">
+            <h3>View properties</h3>
+            <p>The table below the chart shows mechanical, thermal, and corrosion properties for all pinned alloys and the nearest match side by side.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
