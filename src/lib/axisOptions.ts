@@ -1,5 +1,5 @@
 import type { Alloy, AlloyFamily } from "../types";
-import { ELEMENTS } from "../data/elements";
+import { ELEMENTS, getEffectiveComposition } from "../data/elements";
 
 export interface AxisOption {
   key: string;
@@ -34,7 +34,7 @@ export const AXIS_OPTIONS: AxisOption[] = [
     key: `elem_${el.symbol}`,
     label: `${el.symbol} (wt%)`,
     category: "element" as const,
-    getValue: (a: Alloy) => a.composition[el.symbol] ?? 0,
+    getValue: (a: Alloy) => getEffectiveComposition(a)[el.symbol] ?? 0,
   })),
 ];
 

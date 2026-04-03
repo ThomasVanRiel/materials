@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   ScatterChart,
   Scatter,
@@ -29,6 +29,8 @@ interface Props {
   yAxisKey: string;
   onXAxisChange: (key: string) => void;
   onYAxisChange: (key: string) => void;
+  hiddenFamilies: Set<AlloyFamily>;
+  onToggleFamily: (family: AlloyFamily) => void;
 }
 
 interface DataPoint {
@@ -108,9 +110,7 @@ function FamilyPatches({
   );
 }
 
-export function ScatterPlot({ pinnedAlloys, xAxisKey, yAxisKey, onXAxisChange, onYAxisChange }: Props) {
-  const [hiddenFamilies, setHiddenFamilies] = useState<Set<AlloyFamily>>(() => new Set());
-
+export function ScatterPlot({ pinnedAlloys, xAxisKey, yAxisKey, onXAxisChange, onYAxisChange, hiddenFamilies, onToggleFamily }: Props) {
   const xOpt = AXIS_OPTIONS_MAP.get(xAxisKey)!;
   const yOpt = AXIS_OPTIONS_MAP.get(yAxisKey)!;
 
@@ -136,15 +136,6 @@ export function ScatterPlot({ pinnedAlloys, xAxisKey, yAxisKey, onXAxisChange, o
 
     return { familyData: fam, pinnedData: pinned };
   }, [xOpt, yOpt, pinnedAlloys]);
-
-  const toggleFamily = useCallback((family: AlloyFamily) => {
-    setHiddenFamilies((prev) => {
-      const next = new Set(prev);
-      if (next.has(family)) next.delete(family);
-      else next.add(family);
-      return next;
-    });
-  }, []);
 
   return (
     <div className={styles.container}>
@@ -241,7 +232,7 @@ export function ScatterPlot({ pinnedAlloys, xAxisKey, yAxisKey, onXAxisChange, o
           <div
             key={family}
             className={hiddenFamilies.has(family) ? styles.legendItemHidden : styles.legendItem}
-            onClick={() => toggleFamily(family)}
+            onClick={() => onToggleFamily(family)}
           >
             <span
               className={styles.legendDot}

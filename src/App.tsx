@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import type { Alloy } from "./types";
+import type { Alloy, AlloyFamily } from "./types";
 import { ALLOYS } from "./data/alloys";
 import { computePrevalence, getElementsByPrevalence } from "./data/elements";
 import { useComposition } from "./hooks/useComposition";
@@ -66,6 +66,14 @@ export default function App() {
   const { selectedElements, toggleElement } = useElementSelection();
   const [selectedAlloy, setSelectedAlloy] = useState<Alloy | null>(null);
   const [pinnedAlloys, setPinnedAlloys] = useState<Alloy[]>([]);
+  const [hiddenFamilies, setHiddenFamilies] = useState<Set<AlloyFamily>>(() => {
+    try {
+      const saved = localStorage.getItem("hiddenFamilies");
+      return saved ? new Set(JSON.parse(saved) as AlloyFamily[]) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
   const initRoute = useMemo(() => getRouteState(), []);
   const [activeTab, setActiveTab] = useState<Tab>(initRoute.tab);
   const [scatterXAxis, setScatterXAxis] = useState(initRoute.xAxis);
@@ -142,6 +150,16 @@ export default function App() {
         return prev.filter((a) => a.id !== alloy.id);
       }
       return [...prev, alloy];
+    });
+  }, []);
+
+  const handleToggleFamily = useCallback((family: AlloyFamily) => {
+    setHiddenFamilies((prev) => {
+      const next = new Set(prev);
+      if (next.has(family)) next.delete(family);
+      else next.add(family);
+      try { localStorage.setItem("hiddenFamilies", JSON.stringify([...next])); } catch {}
+      return next;
     });
   }, []);
 
@@ -233,6 +251,8 @@ export default function App() {
                 yAxisKey={scatterYAxis}
                 onXAxisChange={handleScatterXChange}
                 onYAxisChange={handleScatterYChange}
+                hiddenFamilies={hiddenFamilies}
+                onToggleFamily={handleToggleFamily}
               />
             </div>
           )}

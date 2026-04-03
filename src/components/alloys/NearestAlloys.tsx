@@ -1,5 +1,6 @@
 import type { AlloyMatch } from "../../hooks/useNearestAlloys";
 import type { Alloy } from "../../types";
+import { getEffectiveComposition } from "../../data/elements";
 import { AlloyTooltip } from "./AlloyTooltip";
 import styles from "./NearestAlloys.module.css";
 
@@ -24,7 +25,7 @@ export function NearestAlloys({ matches, selectedAlloy, onSelect }: Props) {
       <h3 className={styles.title}>Nearest Alloys</h3>
       <div className={styles.list}>
         {matches.map(({ alloy, similarity }) => (
-          <AlloyTooltip key={alloy.id} composition={alloy.composition}>
+          <AlloyTooltip key={alloy.id} composition={getEffectiveComposition(alloy)}>
             <button
               className={`${styles.item} ${selectedAlloy?.id === alloy.id ? styles.active : ""}`}
               onClick={() => onSelect(alloy)}

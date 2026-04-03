@@ -1,4 +1,4 @@
-import type { ElementInfo } from "../types";
+import type { ElementInfo, Alloy, AlloyFamily } from "../types";
 
 export const ELEMENTS: ElementInfo[] = [
   { symbol: "C",  name: "Carbon",      atomicNumber:  6, sliderMin: 0, sliderMax: 2.5,  step: 0.01,  color: "#374151" },
@@ -26,6 +26,27 @@ export const ELEMENTS: ElementInfo[] = [
 
 export const ELEMENT_MAP = new Map(ELEMENTS.map((e) => [e.symbol, e]));
 
+export const FAMILY_BALANCE: Record<AlloyFamily, string> = {
+  "Carbon Steel":    "Fe",
+  "Stainless Steel": "Fe",
+  "Tool Steel":      "Fe",
+  "Nickel Alloy":    "Ni",
+  "Aluminum Alloy":  "Al",
+  "Copper Alloy":    "Cu",
+};
+
+/**
+ * Returns the composition including the implied balance element.
+ * Alloy data omits the balance element (e.g. Fe for steels); this computes it.
+ */
+export function getEffectiveComposition(alloy: Alloy): Record<string, number> {
+  const explicit = alloy.composition;
+  const balanceSym = FAMILY_BALANCE[alloy.family];
+  if (!balanceSym || balanceSym in explicit) return explicit;
+  const sum = Object.values(explicit).reduce((s, v) => s + v, 0);
+  return { ...explicit, [balanceSym]: Math.max(0, Math.round((100 - sum) * 100) / 100) };
+}
+
 /** Default elements shown as radar axes */
 export const DEFAULT_SELECTED_ELEMENTS = new Set(["C", "Cr", "Ni", "Mo", "Mn", "V"]);
 
@@ -33,21 +54,12 @@ export const DEFAULT_SELECTED_ELEMENTS = new Set(["C", "Cr", "Ni", "Mo", "Mn", "
  * Precompute total wt% prevalence per element across all alloys.
  * Called once at module load from alloys data.
  */
-export function computePrevalence(
-  alloys: Array<{ composition: Record<string, number> }>
-): Map<string, number> {
+export function computePrevalence(alloys: Alloy[]): Map<string, number> {
   const totals = new Map<string, number>();
   for (const alloy of alloys) {
-    // Sum explicit elements
-    let explicitSum = 0;
-    for (const [sym, wt] of Object.entries(alloy.composition)) {
+    const effective = getEffectiveComposition(alloy);
+    for (const [sym, wt] of Object.entries(effective)) {
       totals.set(sym, (totals.get(sym) ?? 0) + wt);
-      explicitSum += wt;
-    }
-    // Attribute the balance (100% - explicit) to Fe if Fe isn't listed
-    if (!("Fe" in alloy.composition)) {
-      const feBalance = Math.max(0, 100 - explicitSum);
-      totals.set("Fe", (totals.get("Fe") ?? 0) + feBalance);
     }
   }
   return totals;

@@ -20,7 +20,9 @@ function makeDefaultComposition(): Composition {
  */
 export function useComposition() {
   const [composition, setComposition] = useState<Composition>(makeDefaultComposition);
-  const [balanceElement, setBalanceElement] = useState("Fe");
+  const [balanceElement, setBalanceElement] = useState(
+    () => localStorage.getItem("balanceElement") ?? "Fe"
+  );
 
   const recalcBalance = (comp: Composition, bal: string): Composition => {
     let sum = 0;
@@ -52,6 +54,7 @@ export function useComposition() {
 
   const changeBalanceElement = useCallback(
     (newBalance: string) => {
+      try { localStorage.setItem("balanceElement", newBalance); } catch {}
       setBalanceElement(newBalance);
       setComposition((prev) => recalcBalance(prev, newBalance));
     },

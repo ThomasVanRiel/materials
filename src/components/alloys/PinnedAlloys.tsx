@@ -1,5 +1,6 @@
 import type { Alloy } from "../../types";
 import { ALLOYS } from "../../data/alloys";
+import { getEffectiveComposition } from "../../data/elements";
 import { AlloyTooltip } from "./AlloyTooltip";
 import styles from "./PinnedAlloys.module.css";
 
@@ -40,7 +41,7 @@ export function PinnedAlloys({ pinnedAlloys, onToggle }: Props) {
       )}
       <div className={styles.list}>
         {ALLOYS.filter((a) => !pinnedIds.has(a.id)).map((alloy) => (
-          <AlloyTooltip key={alloy.id} composition={alloy.composition}>
+          <AlloyTooltip key={alloy.id} composition={getEffectiveComposition(alloy)}>
             <button
               className={styles.item}
               onClick={() => onToggle(alloy)}
