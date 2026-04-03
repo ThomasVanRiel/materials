@@ -2,6 +2,15 @@ import type { Alloy } from "../../types";
 import { ALLOYS } from "../../data/alloys";
 import { getEffectiveComposition } from "../../data/elements";
 import { AlloyTooltip } from "./AlloyTooltip";
+
+const FAMILY_COLORS: Record<string, string> = {
+  "Carbon Steel": "#78716c",
+  "Stainless Steel": "#059669",
+  "Tool Steel": "#dc2626",
+  "Nickel Alloy": "#d97706",
+  "Aluminum Alloy": "#2563eb",
+  "Copper Alloy": "#b45309",
+};
 import styles from "./PinnedAlloys.module.css";
 
 const ALLOY_COLORS = [
@@ -47,7 +56,7 @@ export function PinnedAlloys({ pinnedAlloys, onToggle }: Props) {
               onClick={() => onToggle(alloy)}
             >
               <span className={styles.itemName}>{alloy.name}</span>
-              <span className={styles.itemFamily}>{alloy.family}</span>
+              <span className={styles.itemFamily} style={{ color: FAMILY_COLORS[alloy.family] ?? "#6b7280" }}>{alloy.family}</span>
             </button>
           </AlloyTooltip>
         ))}

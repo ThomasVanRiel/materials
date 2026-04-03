@@ -23,4 +23,14 @@ npm run dev
 
 ## TODO
 
-- Add dark mode (stretch goal)
+1. Shareable composition URL — encode slider values in the URL so compositions can be bookmarked or shared
+2. Copy composition — button to copy the current composition as JSON or formatted text
+3. Reset button — clear sliders back to default (pure Fe) or to the last selected known alloy
+4. Highlight nearest alloys on the scatter plot — mark the closest matches when on the Properties tab
+5. Property estimates for custom compositions — interpolate from nearest alloys and show rough values in the Property Display panel
+6. Composition diff view — when an alloy is selected, show ± deviation per element from the current sliders
+7. Wt% ↔ at% toggle — convert between weight percent and atomic percent
+8. Save/name custom compositions — store compositions locally with a user label and recall them later
+9. Multi-composition radar overlay — overlay a second custom composition on the radar chart
+10. Property range selection on scatter plot — drag a selection box to filter alloys by a region, with names listed
+11. Add dark mode (stretch goal)

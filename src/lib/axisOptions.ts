@@ -1,5 +1,5 @@
 import type { Alloy, AlloyFamily } from "../types";
-import { ELEMENTS, getEffectiveComposition } from "../data/elements";
+import { ELEMENTS, FAMILY_BALANCE, getEffectiveComposition } from "../data/elements";
 
 export interface AxisOption {
   key: string;
@@ -29,6 +29,16 @@ export const AXIS_OPTIONS: AxisOption[] = [
   // Corrosion
   { key: "corrosionResistance", label: "Corrosion Resistance", category: "corrosion", getValue: (a) => CORROSION_MAP[a.properties.corrosion.corrosionResistance] ?? null },
   { key: "pren", label: "PREN", category: "corrosion", getValue: (a) => a.properties.corrosion.pren },
+  // Balance element (varies per alloy family)
+  {
+    key: "elem_balance",
+    label: "Balance (wt%)",
+    category: "element" as const,
+    getValue: (a: Alloy) => {
+      const sym = FAMILY_BALANCE[a.family];
+      return sym ? (getEffectiveComposition(a)[sym] ?? 0) : null;
+    },
+  },
   // Elements
   ...ELEMENTS.map((el) => ({
     key: `elem_${el.symbol}`,

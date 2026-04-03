@@ -115,7 +115,7 @@ export default function App() {
     [balanceElement]
   );
 
-  const nearestAlloys = useNearestAlloys(composition, ALLOYS);
+  const nearestAlloys = useNearestAlloys(composition, ALLOYS, ALLOYS.length);
 
   const handleElementChange = useCallback(
     (symbol: string, value: number) => {
@@ -162,6 +162,8 @@ export default function App() {
       return next;
     });
   }, []);
+
+  const [guideOpen, setGuideOpen] = useState(false);
 
   const displayAlloy = selectedAlloy ?? nearestAlloys[0]?.alloy ?? null;
 
@@ -279,33 +281,43 @@ export default function App() {
       </div>
 
       <footer className="guide">
-        <h2 className="guide-title">How to use</h2>
-        <div className="guide-grid">
-          <div className="guide-item">
-            <h3>Adjust composition</h3>
-            <p>Use the sliders on the left to set element concentrations. The balance element (default: Fe) auto-adjusts to keep the total at 100%. You can change which element is the balance with the dropdown.</p>
+        <button className="guide-toggle" onClick={() => setGuideOpen((v) => !v)}>
+          <h2 className="guide-title">How to use</h2>
+          <span className="guide-chevron">{guideOpen ? "▲" : "▼"}</span>
+        </button>
+        {guideOpen && (
+          <div className="guide-grid">
+            {isComposition ? (
+              <>
+                <div className="guide-item">
+                  <h3>Adjust composition</h3>
+                  <p>Use the sliders on the left to set element concentrations. The balance element (default: Fe) auto-adjusts to keep the total at 100%. You can change which element is the balance with the dropdown.</p>
+                </div>
+                <div className="guide-item">
+                  <h3>Drag on the chart</h3>
+                  <p>Click and drag along any axis on the radar chart to adjust that element directly. The chart scale stays fixed while dragging for stability.</p>
+                </div>
+                <div className="guide-item">
+                  <h3>Choose radar axes</h3>
+                  <p>Toggle element chips to control which elements appear as individual axes on the radar chart. Unselected elements are grouped into "Other" (if enabled). Elements are sorted by prevalence across all alloys.</p>
+                </div>
+                <div className="guide-item">
+                  <h3>Select a known alloy</h3>
+                  <p>Search for a known alloy at the top left. Selecting one sets all sliders to its composition. Moving any slider afterwards clears the selection and recalculates the nearest match.</p>
+                </div>
+              </>
+            ) : (
+              <div className="guide-item">
+                <h3>Explore properties</h3>
+                <p>Click the axis labels to change what's plotted on X and Y. Families appear as colored patches — click a family in the legend to hide it. Pinned alloys are highlighted with labels.</p>
+              </div>
+            )}
+            <div className="guide-item">
+              <h3>Compare alloys</h3>
+              <p>Click alloys in the "Compare Alloys" panel on the right to pin them to the chart. Each pinned alloy appears as a colored overlay. Click a pinned alloy again to remove it.</p>
+            </div>
           </div>
-          <div className="guide-item">
-            <h3>Drag on the chart</h3>
-            <p>Click and drag along any axis on the radar chart to adjust that element directly. The chart scale stays fixed while dragging for stability.</p>
-          </div>
-          <div className="guide-item">
-            <h3>Choose radar axes</h3>
-            <p>Toggle element chips to control which elements appear as individual axes on the radar chart. Unselected elements are grouped into "Other" (if enabled). Elements are sorted by prevalence across all alloys.</p>
-          </div>
-          <div className="guide-item">
-            <h3>Select a known alloy</h3>
-            <p>Search for a known alloy at the top left. Selecting one sets all sliders to its composition. Moving any slider afterwards clears the selection and recalculates the nearest match.</p>
-          </div>
-          <div className="guide-item">
-            <h3>Compare alloys</h3>
-            <p>Click alloys in the "Compare Alloys" panel on the right to pin them to the chart. Each pinned alloy appears as a colored overlay. Click a pinned alloy again to remove it.</p>
-          </div>
-          <div className="guide-item">
-            <h3>Explore properties</h3>
-            <p>Switch to the Properties tab to see an XY scatter plot of all alloys. Click the axis labels to change what's plotted. Families appear as colored patches. Pinned alloys are highlighted.</p>
-          </div>
-        </div>
+        )}
       </footer>
     </div>
   );
